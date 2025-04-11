@@ -32,11 +32,11 @@ const InputField: React.FC<InputFieldProps> = ({
   const getIcon = () => {
     switch (icon) {
       case "mail":
-        return <HiOutlineMail className="w-5 h-5 text-emerald-400" />;
+        return <HiOutlineMail className="w-5 h-5 text-white" />;
       case "lock":
-        return <HiOutlineLockClosed className="w-5 h-5 text-emerald-400" />;
+        return <HiOutlineLockClosed className="w-5 h-5 text-white" />;
       case "person":
-        return <HiOutlineMail className="w-5 h-5 text-emerald-400" />;
+        return <HiOutlineMail className="w-5 h-5 text-white" />;
       default:
         return null;
     }
@@ -53,13 +53,13 @@ const InputField: React.FC<InputFieldProps> = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className={`w-full p-4 pl-12 pr-12 text-white border rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 ${className}`}
+        className={`w-full p-4 pl-12 pr-12 text-white border rounded-md focus:outline-none focus:ring-2 focus:ring-white ${className}`}
       />
       {type === "password" && (
         <button
           type="button"
           onClick={togglePasswordVisibility}
-          className="absolute inset-y-0 right-0 flex items-center pr-4 text-emerald-400"
+          className="absolute inset-y-0 right-0 flex items-center pr-4 text-white"
         >
           {showPassword ? (
             <HiOutlineEyeOff className="w-5 h-5" />

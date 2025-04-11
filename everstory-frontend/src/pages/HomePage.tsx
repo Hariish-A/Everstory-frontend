@@ -1,72 +1,29 @@
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import SocialLogin from "@/components/auth/SocialLogin";
+import { motion } from "framer-motion";
 import InputField from "@/components/auth/InputField";
+import SocialLogin from "@/components/auth/SocialLogin";
 import axiosInstance from "@/api/client";
+import Star from "@/components/ui/Star";
+import logo from "@/assets/everstory-logo.png";
 
-// Utility: Star animation component
-const Star = ({
-  delay,
-  duration,
-  top,
-  width,
-}: {
-  delay: number;
-  duration: number;
-  top: number;
-  width: number;
-}) => (
-  <motion.div
-    className="absolute h-0.5 bg-gradient-to-r from-green-400 to-transparent rounded-full opacity-70"
-    style={{
-      top: `${top}vh`,
-      width: `${width}em`,
-      filter: "drop-shadow(0 0 2px #4ade80)",
-    }}
-    initial={{ x: "100vw" }}
-    animate={{ x: "-30vw" }}
-    transition={{
-      duration,
-      delay,
-      repeat: Infinity,
-      repeatType: "loop",
-      ease: "linear",
-    }}
-  >
-    <motion.div
-      className="absolute top-0 left-0 w-1 h-full bg-gradient-to-r from-green-400 to-transparent rounded-full rotate-45"
-      animate={{ opacity: [1, 0.6, 1] }}
-      transition={{ duration: 2, repeat: Infinity }}
-    />
-    <motion.div
-      className="absolute top-0 left-0 w-1 h-full bg-gradient-to-r from-green-400 to-transparent rounded-full -rotate-45"
-      animate={{ opacity: [1, 0.6, 1] }}
-      transition={{ duration: 2, repeat: Infinity }}
-    />
-  </motion.div>
-);
-
-const HomePage: React.FC = () => {
+const HomePage = () => {
+  const navigate = useNavigate();
+  const [stars, setStars] = useState<any[]>([]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [stars, setStars] = useState<any[]>([]);
-  const navigate = useNavigate();
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const generateStars = () => {
-      const newStars = Array.from({ length: 50 }, (_, i) => ({
-        id: i,
-        top: Math.random() * 100,
-        delay: Math.random() * 10,
-        duration: Math.random() * 6 + 6,
-        width: Math.random() * 7.5 + 5,
-      }));
-      setStars(newStars);
-    };
-    generateStars();
+    const generatedStars = Array.from({ length: 50 }, (_, i) => ({
+      id: i,
+      delay: Math.random() * 10,
+      duration: Math.random() * 6 + 6,
+      top: Math.random() * 100,
+      width: Math.random() * 7.5 + 5,
+    }));
+    setStars(generatedStars);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -83,7 +40,7 @@ const HomePage: React.FC = () => {
       localStorage.setItem("access_token", access_token);
       localStorage.setItem("refresh_token", refresh_token);
 
-      navigate("/editor"); // redirect after login
+      navigate("/editor");
     } catch (err: any) {
       setError(err?.response?.data?.detail || "Login failed. Please try again.");
     } finally {
@@ -92,26 +49,36 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#0d1d31] to-[#0c0d13] p-4 overflow-hidden relative">
-      {/* Background Stars */}
-      <div className="fixed top-0 left-0 w-full h-screen -rotate-45 overflow-hidden pointer-events-none">
+    <div
+      className="min-h-screen flex items-center justify-center p-4 overflow-hidden relative"
+      style={{
+        backgroundImage: "url('/src/assets/everstory-bg-plain.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      {/* Stars */}
+      <div className="fixed top-0 left-0 w-full h-screen -rotate-45 overflow-hidden pointer-events-none z-0">
         {stars.map((star) => (
           <Star key={star.id} {...star} />
         ))}
       </div>
 
-      {/* Login Card */}
+      {/* Login Card - now black */}
       <motion.div
-        className="max-w-md w-full p-8 bg-black/30 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-700/30 relative z-10"
+        className="max-w-md w-full p-8 bg-black rounded-2xl shadow-2xl border border-gray-700 relative z-10"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h2 className="text-center text-2xl font-semibold mb-8 text-white">
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-400 via-emerald-500 to-blue-400">
-            Login to Everstory
-          </span>
-        </h2>
+        {/* Larger Logo */}
+        <div className="flex justify-center mb-8">
+          <img
+            src={logo}
+            alt="Everstory Logo"
+            className="w-32 h-32 object-contain"
+          />
+        </div>
 
         <SocialLogin />
 
@@ -144,14 +111,15 @@ const HomePage: React.FC = () => {
 
           <Link
             to="/reset-password"
-            className="block text-emerald-400 hover:text-emerald-300 text-sm transition-colors duration-300"
+            className="block text-white hover:text-gray-300 text-sm transition-colors duration-300 text-center"
           >
             Forgot password?
           </Link>
 
+          {/* Yellow login button */}
           <button
             type="submit"
-            className="w-full py-3 bg-gradient-to-r from-green-500 via-emerald-500 to-blue-500 text-white font-medium rounded-full hover:shadow-lg hover:shadow-emerald-500/20 transition duration-300 disabled:opacity-50"
+            className="w-full py-3 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold rounded-full transition duration-300 disabled:opacity-50"
             disabled={loading}
           >
             {loading ? (
@@ -169,11 +137,11 @@ const HomePage: React.FC = () => {
           </button>
         </form>
 
-        <p className="mt-8 text-center text-gray-400">
+        <p className="mt-8 text-center text-white">
           Don’t have an account?{" "}
           <Link
             to="/signup"
-            className="text-emerald-400 hover:text-emerald-300 font-medium transition-colors duration-300"
+            className="hover:text-gray-300 font-medium transition-colors duration-300"
           >
             Sign up
           </Link>
