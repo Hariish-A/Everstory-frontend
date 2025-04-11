@@ -20,3 +20,18 @@
     }
   }
 }
+
+@layer utilities {
+  @keyframes fade-slow {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .animate-fade-slow {
+    animation: fade-slow 2s ease-out forwards;
+  }
+}
