@@ -53,8 +53,9 @@ const InputField: React.FC<InputFieldProps> = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className={`w-full p-4 pl-12 pr-12 text-white border rounded-md focus:outline-none focus:ring-2 focus:ring-white ${className}`}
-      />
+        className={`w-full p-4 pl-12 pr-12 text-white border rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400 ${className}`}
+        />
+        
       {type === "password" && (
         <button
           type="button"

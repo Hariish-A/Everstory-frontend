@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import InputField from "@/components/auth/InputField";
+import InputField from "@/pages/auth/components/InputField";
 import axiosInstance from "@/api/client";
-import Star from "@/components/ui/Star";
-import logo from "@/assets/everstory-logo.png";
+import Star from "@/pages/auth/components/Star";
+import logo from "@/assets/everstory-logo-white.png";
 
 const UpdatePassword: React.FC = () => {
   const [password, setPassword] = useState("");
@@ -93,7 +93,11 @@ const UpdatePassword: React.FC = () => {
         transition={{ duration: 0.5 }}
       >
         <div className="flex justify-center mb-8">
-          <img src={logo} alt="Everstory Logo" className="w-32 h-32 object-contain" />
+          <img
+            src={logo}
+            alt="Everstory Logo"
+            className="w-32 h-32 object-contain"
+          />
         </div>
 
         <h2 className="text-xl font-semibold text-white text-center mb-6">
@@ -140,7 +144,11 @@ const UpdatePassword: React.FC = () => {
                   <motion.div
                     className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
                     animate={{ rotate: 360 }}
-                    transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                    transition={{
+                      repeat: Infinity,
+                      duration: 1,
+                      ease: "linear",
+                    }}
                   />
                   <span className="ml-2">Updating...</span>
                 </div>

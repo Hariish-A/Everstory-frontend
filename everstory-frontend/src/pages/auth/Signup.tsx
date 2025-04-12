@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import InputField from "@/components/auth/InputField";
-import SocialLogin from "@/components/auth/SocialLogin";
+import InputField from "@/pages/auth/components/InputField";
+import SocialLogin from "@/pages/auth/components/SocialLogin";
 import axiosInstance from "@/api/client";
-import Star from "@/components/ui/Star";
-import logo from "@/assets/everstory-logo.png";
+import Star from "@/pages/auth/components/Star";
+import logo from "@/assets/everstory-logo-white.png";
 
 const Signup: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -53,7 +53,11 @@ const Signup: React.FC = () => {
       navigate("/login");
     } catch (err: any) {
       const msg = err?.response?.data?.detail;
-      setError(Array.isArray(msg) ? msg.map((e: any) => `${e.loc.join(".")}: ${e.msg}`).join(", ") : msg || "Signup failed.");
+      setError(
+        Array.isArray(msg)
+          ? msg.map((e: any) => `${e.loc.join(".")}: ${e.msg}`).join(", ")
+          : msg || "Signup failed."
+      );
     } finally {
       setLoading(false);
     }
@@ -84,13 +88,19 @@ const Signup: React.FC = () => {
       >
         {/* Larger Logo */}
         <div className="flex justify-center mb-8">
-          <img src={logo} alt="Everstory Logo" className="w-32 h-32 object-contain" />
+          <img
+            src={logo}
+            alt="Everstory Logo"
+            className="w-32 h-32 object-contain"
+          />
         </div>
 
         <SocialLogin />
 
         <div className="relative my-8 text-center">
-          <span className="relative z-10 px-4 text-gray-300 font-medium">or</span>
+          <span className="relative z-10 px-4 text-gray-300 font-medium">
+            or
+          </span>
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-gray-700/50"></div>
           </div>

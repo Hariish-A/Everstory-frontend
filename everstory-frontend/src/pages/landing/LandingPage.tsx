@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "@/assets/everstory-logo.png";
-import BrownButton from "@/components/ui/BrownButton";
-import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import BrownButton from "@/pages/landing/components/BrownButton";
+import LoadingSpinner from "@/pages/landing/components/LoadingSpinner";
 
 const LandingPage = () => {
   const navigate = useNavigate();
