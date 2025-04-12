@@ -1,5 +1,5 @@
 import { useQuery, useMutation, QueryClientConfig } from '@tanstack/react-query';
-import axiosInstance from '../api/client';
+import axiosInstance from "@/api/client";
 
 export const useApiGet = (queryKey: any, url: string, config: QueryClientConfig) => {
   const [key, params] = queryKey;
