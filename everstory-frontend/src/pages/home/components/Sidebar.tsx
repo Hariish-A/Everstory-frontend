@@ -8,7 +8,6 @@ const Sidebar = () => {
 
   const handleFeedClick = () => {
     if (location.pathname === "/for-you") {
-      // Force refresh workaround
       navigate("/temp", { replace: true });
       setTimeout(() => navigate("/for-you", { replace: true }), 0);
     } else {
@@ -20,6 +19,10 @@ const Sidebar = () => {
     if (location.pathname !== "/friends") {
       navigate("/friends");
     }
+  };
+
+  const handleProfileClick = () => {
+    navigate("/profile");
   };
 
   return (
@@ -61,11 +64,18 @@ const Sidebar = () => {
       {/* Bottom Section */}
       <div>
         <div className="border-t border-white/30 mb-4" />
+
         <div className="flex items-center justify-between px-2">
-          <div className="flex items-center gap-3">
+          {/* Entire left side clickable for profile */}
+          <div
+            className="flex items-center gap-3 cursor-pointer"
+            onClick={handleProfileClick}
+          >
             <div className="w-10 h-10 rounded-full bg-gray-300" />
             <span className="text-white text-sm">Profile</span>
           </div>
+
+          {/* Logout button (non-clickable area for profile navigation) */}
           <button className="text-white hover:text-orange-300 transition">
             <LogOut size={20} />
           </button>

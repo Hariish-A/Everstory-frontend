@@ -22,7 +22,7 @@ const FriendPage = () => {
           {/* Static search bar section */}
           <div className="sticky top-2 z-10">
             <SearchBar />
-            <UserInfo className="right-57" />
+            {/* <UserInfo className="right-57" /> */}
             </div>
 
           {/* Friends card below */}

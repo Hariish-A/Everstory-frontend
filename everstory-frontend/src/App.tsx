@@ -7,8 +7,7 @@ import UpdatePassword from "./pages/auth/UpdatePassword";
 import OnboardingPage from "./pages/Onboarding";
 import UserForYou from "./pages/home/UserForYou";
 import FriendPage from "@/pages/friend/FriendPage";
-
-
+import ProfilePage from "@/pages/profile/ProfilePage.tsx";
 
 function App() {
   return (
@@ -22,6 +21,7 @@ function App() {
         <Route path="/for-you" element={<UserForYou />} />
         <Route path="/friends" element={<FriendPage />} />
         <Route path="/onboarding" element={<OnboardingPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </Router>
   );

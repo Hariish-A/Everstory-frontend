@@ -5,6 +5,7 @@ import Post from "./components/Post";
 import Sidebar from "./components/Sidebar";
 import SearchBar from "./components/Searchbar";
 import UserInfo from "./components/UserInfo";
+import PostDialog from "./components/PostDialog";
 import { PostType } from "@/types/post";
 import bg from "@/assets/everstory-bg-plain.png";
 import { Plus } from "lucide-react";
@@ -15,6 +16,7 @@ const UserForYou = () => {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [showDialog, setShowDialog] = useState(false);
   const observer = useRef<IntersectionObserver | null>(null);
 
   const lastPostRef = useCallback(
@@ -81,6 +83,7 @@ const UserForYou = () => {
           <div className="flex items-center gap-4" style={{ width: "600px" }}>
             <SearchBar />
             <button
+              onClick={() => setShowDialog(true)}
               className="flex items-center align-middle justify-center bg-[#F1E7D9] text-black font-semibold px-4"
               style={{
                 borderRadius: "28px",
@@ -94,8 +97,8 @@ const UserForYou = () => {
           </div>
 
           {/* User Info */}
-          <UserInfo className="right-59" />
-          </div>
+          {/* <UserInfo className="right-59" /> */}
+        </div>
 
         {/* Post List */}
         <div className="flex">
@@ -137,6 +140,9 @@ const UserForYou = () => {
         <div className="absolute right-30 top-42">
           <PendingRequests />
         </div>
+
+        {/* Post Dialog */}
+        {showDialog && <PostDialog onClose={() => setShowDialog(false)} />}
       </main>
     </div>
   );
