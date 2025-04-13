@@ -1,7 +1,27 @@
 import { Home, Users, LogOut } from "lucide-react";
 import logo from "@/assets/everstory-logo-wide.png";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Sidebar = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleFeedClick = () => {
+    if (location.pathname === "/for-you") {
+      // Force refresh workaround
+      navigate("/temp", { replace: true });
+      setTimeout(() => navigate("/for-you", { replace: true }), 0);
+    } else {
+      navigate("/for-you");
+    }
+  };
+
+  const handleFriendsClick = () => {
+    if (location.pathname !== "/friends") {
+      navigate("/friends");
+    }
+  };
+
   return (
     <div className="w-[308px] min-h-screen bg-[#614426] text-white flex flex-col justify-between pb-6 px-4">
       {/* Top Section */}
@@ -16,14 +36,20 @@ const Sidebar = () => {
 
         {/* Navigation Buttons */}
         <nav className="flex flex-col space-y-8">
-          <button className="flex items-center gap-4 text-xl w-full group pl-4">
+          <button
+            onClick={handleFeedClick}
+            className="flex items-center gap-4 text-xl w-full group pl-4"
+          >
             <Home size={28} className="text-orange-400" />
             <span className="text-yellow-400 group-hover:text-orange-300 transition-colors">
               Feed
             </span>
           </button>
 
-          <button className="flex items-center gap-4 text-xl w-full group pl-4">
+          <button
+            onClick={handleFriendsClick}
+            className="flex items-center gap-4 text-xl w-full group pl-4"
+          >
             <Users size={28} className="text-orange-400" />
             <span className="text-yellow-400 group-hover:text-orange-300 transition-colors">
               Friends

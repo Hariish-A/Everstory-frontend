@@ -6,6 +6,8 @@ import ResetPassword from "./pages/auth/ResetPassword";
 import UpdatePassword from "./pages/auth/UpdatePassword";
 import OnboardingPage from "./pages/Onboarding";
 import UserForYou from "./pages/home/UserForYou";
+import FriendPage from "@/pages/friend/FriendPage";
+
 
 
 function App() {
@@ -17,7 +19,8 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/update-password" element={<UpdatePassword />} />
-        <Route path="for-you" element={<UserForYou />} />
+        <Route path="/for-you" element={<UserForYou />} />
+        <Route path="/friends" element={<FriendPage />} />
         <Route path="/onboarding" element={<OnboardingPage />} />
       </Routes>
     </Router>

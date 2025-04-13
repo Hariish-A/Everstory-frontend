@@ -3,10 +3,12 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import Post from "./components/Post";
 import Sidebar from "./components/Sidebar";
+import SearchBar from "./components/Searchbar";
+import UserInfo from "./components/UserInfo";
 import { PostType } from "@/types/post";
 import bg from "@/assets/everstory-bg-plain.png";
-import { Search } from "lucide-react";
-
+import { Plus } from "lucide-react";
+import PendingRequests from "./components/PendingRequests";
 
 const UserForYou = () => {
   const [posts, setPosts] = useState<PostType[]>([]);
@@ -41,7 +43,7 @@ const UserForYou = () => {
           id: posts.length + index + 1,
           image: "https://placehold.co/400x400",
           content: `Post ${posts.length + index + 1}`,
-          author: "User",
+          author: `User ${index + 1}`,
           timestamp: new Date().toISOString(),
         }));
 
@@ -70,72 +72,70 @@ const UserForYou = () => {
 
       {/* Main scrollable feed */}
       <main className="flex-1 overflow-y-auto px-4 py-6 pl-[110px]">
-        {/* Search & Post Row */}
-        <div className="mt-8 mb-6 flex items-center gap-4" style={{ width: "600px" }}>
-          {/* Search Bar */}
-          <div
-            className="flex items-center px-4 flex-grow"
-            style={{
-              backgroundColor: "#FEE9E7",
-              borderRadius: "28px",
-              height: "48px",
-            }}
-          >
-            <input
-              type="text"
-              placeholder="Search Users"
-              className="bg-transparent flex-1 text-black placeholder:text-gray-700 focus:outline-none"
-            />
-            <Search className="h-5 w-5 text-black" />
+        {/* Top Bar */}
+        <div
+          className="sticky top-7 z-10 flex items-center justify-between mb-6 pr-6"
+          style={{ width: "100%", background: "transparent" }}
+        >
+          {/* Search + Post */}
+          <div className="flex items-center gap-4" style={{ width: "600px" }}>
+            <SearchBar />
+            <button
+              className="flex items-center align-middle justify-center bg-[#F1E7D9] text-black font-semibold px-4"
+              style={{
+                borderRadius: "28px",
+                height: "48px",
+                width: "100px",
+              }}
+            >
+              <Plus height={16} className="mt-0.5" />
+              <span>Post</span>
+            </button>
           </div>
 
-          {/* Post Button */}
-          <button
-            className="flex items-center justify-center bg-[#F1E7D9] text-black font-semibold px-4"
-            style={{
-              borderRadius: "28px",
-              height: "48px",
-              width: "100px",
-            }}
-          >
-            <span className="text-xl mr-2">+</span>Post
-          </button>
-        </div>
-
-
+          {/* User Info */}
+          <UserInfo className="right-59" />
+          </div>
 
         {/* Post List */}
-        <div className="space-y-[51px]">
-          {posts.map((post, index) => (
-            <div
-              key={post.id}
-              ref={index === posts.length - 1 ? lastPostRef : undefined}
-              className={index === 0 ? "mt-[70px]" : ""}
-            >
-              <Post post={post} />
-            </div>
-          ))}
+        <div className="flex">
+          <div className="space-y-[51px] w-3/5">
+            {posts.map((post, index) => (
+              <div
+                key={post.id}
+                ref={index === posts.length - 1 ? lastPostRef : undefined}
+                className={index === 0 ? "mt-[70px]" : ""}
+              >
+                <Post post={post} />
+              </div>
+            ))}
 
-          {loading && (
-            <div className="space-y-4">
-              {[...Array(3)].map((_, index) => (
-                <div
-                  key={`skeleton-${index}`}
-                  className="bg-white p-4 rounded-lg shadow space-y-4"
-                >
-                  <div className="flex items-center">
-                    <Skeleton circle width={48} height={48} />
-                    <div className="ml-3">
-                      <Skeleton width={120} height={20} />
-                      <Skeleton width={100} height={16} />
+            {loading && (
+              <div className="space-y-4">
+                {[...Array(3)].map((_, index) => (
+                  <div
+                    key={`skeleton-${index}`}
+                    className="bg-white p-4 rounded-lg shadow space-y-4"
+                  >
+                    <div className="flex items-center">
+                      <Skeleton circle width={48} height={48} />
+                      <div className="ml-3">
+                        <Skeleton width={120} height={20} />
+                        <Skeleton width={100} height={16} />
+                      </div>
                     </div>
+                    <Skeleton height={600} className="rounded-lg" />
+                    <Skeleton height={40} />
                   </div>
-                  <Skeleton height={600} className="rounded-lg" />
-                  <Skeleton height={40} />
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Pending Requests */}
+        <div className="absolute right-30 top-42">
+          <PendingRequests />
         </div>
       </main>
     </div>
