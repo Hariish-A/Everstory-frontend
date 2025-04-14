@@ -1,20 +1,22 @@
+// src/pages/home/UserForYou.tsx
+
 import { useEffect, useState, useRef, useCallback } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import Post from "./components/Post";
 import Sidebar from "./components/Sidebar";
 import SearchBar from "./components/Searchbar";
-import UserInfo from "./components/UserInfo";
 import PostDialog from "./components/PostDialog";
 import { PostType } from "@/types/post";
 import bg from "@/assets/everstory-bg-plain.png";
 import { Plus } from "lucide-react";
 import PendingRequests from "./components/PendingRequests";
+import axiosInstance from "@/api/client";
 
 const UserForYou = () => {
   const [posts, setPosts] = useState<PostType[]>([]);
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [showDialog, setShowDialog] = useState(false);
   const observer = useRef<IntersectionObserver | null>(null);
@@ -38,23 +40,23 @@ const UserForYou = () => {
   const fetchPosts = async () => {
     setLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      const newPosts = Array(10)
-        .fill(null)
-        .map((_, index) => ({
-          id: posts.length + index + 1,
-          image: "https://placehold.co/400x400",
-          content: `Post ${posts.length + index + 1}`,
-          author: `User ${index + 1}`,
-          timestamp: new Date().toISOString(),
-        }));
-
-      setPosts((prev) => [...prev, ...newPosts]);
-      setHasMore(page < 5);
-    } catch (error) {
-      console.error("Error fetching posts:", error);
+      const res = await axiosInstance.get(
+        `http://localhost:8021/posts/feed?skip=${page * 10}&limit=10`
+      );
+      const formattedPosts = res.map((p: any) => ({
+        id: p.id,
+        image: p.asset_url,
+        content: "", // no content field in response
+        author: `User ${p.user_id}`, // placeholder
+        timestamp: new Date().toISOString(),
+      }));
+      setPosts((prev) => [...prev, ...formattedPosts]);
+      setHasMore(res.length === 10);
+    } catch (err) {
+      console.error("Error fetching feed posts", err);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -71,15 +73,11 @@ const UserForYou = () => {
       }}
     >
       <Sidebar />
-
-      {/* Main scrollable feed */}
       <main className="flex-1 overflow-y-auto px-4 py-6 pl-[110px]">
-        {/* Top Bar */}
         <div
           className="sticky top-7 z-10 flex items-center justify-between mb-6 pr-6"
           style={{ width: "100%", background: "transparent" }}
         >
-          {/* Search + Post */}
           <div className="flex items-center gap-4" style={{ width: "600px" }}>
             <SearchBar />
             <button
@@ -95,12 +93,9 @@ const UserForYou = () => {
               <span>Post</span>
             </button>
           </div>
-
-          {/* User Info */}
-          {/* <UserInfo className="right-59" /> */}
         </div>
 
-        {/* Post List */}
+        {/* Posts */}
         <div className="flex">
           <div className="space-y-[51px] w-3/5">
             {posts.map((post, index) => (
@@ -136,12 +131,10 @@ const UserForYou = () => {
           </div>
         </div>
 
-        {/* Pending Requests */}
         <div className="absolute right-30 top-42">
           <PendingRequests />
         </div>
 
-        {/* Post Dialog */}
         {showDialog && <PostDialog onClose={() => setShowDialog(false)} />}
       </main>
     </div>

@@ -1,19 +1,26 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.REACT_APP_API_BASE_URL || "http://localhost:3000",
+  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:8001",
   timeout: 10000,
-  // withCredentials: true, // uncomment for cookie based auth
   headers: {
     "Content-Type": "application/json",
   },
 });
 
+// 🔒 Inject Authorization header from localStorage
 axiosInstance.interceptors.request.use(
-  (config) => config,
+  (config) => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
   (error) => Promise.reject(error)
 );
 
+// 📦 Return only response data or throw
 axiosInstance.interceptors.response.use(
   (response) => response.data,
   (error) => {

@@ -3,21 +3,39 @@ import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import InputField from "@/pages/auth/components/InputField";
 import SocialLogin from "@/pages/auth/components/SocialLogin";
-import axiosInstance from "@/api/client";
 import Star from "@/pages/auth/components/Star";
 import logo from "@/assets/everstory-logo-white.png";
+import { useApiPost } from "@/hooks/useApi";
+import toast from "react-hot-toast";
+
 
 const Signup: React.FC = () => {
   const [formData, setFormData] = useState({
-    first_name: "",
-    last_name: "",
+    name: "",
     email: "",
     password: "",
   });
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
   const [stars, setStars] = useState<any[]>([]);
   const navigate = useNavigate();
+
+  const [error, setError] = useState<string | null>(null);
+
+  const signupMutation = useApiPost("/auth/signup", {
+    onSuccess: (res: any) => {
+      toast.success(res.message || "Signup successful!");
+      navigate("/login");
+    },
+    
+    // In onError
+    onError: (err: any) => {
+      const msg = err?.response?.data?.detail;
+      toast.error(
+        Array.isArray(msg)
+          ? msg.map((e: any) => `${e.loc.join(".")}: ${e.msg}`).join(", ")
+          : msg || "Signup failed."
+      );
+    }
+  });
 
   useEffect(() => {
     const newStars = Array.from({ length: 50 }, (_, i) => ({
@@ -36,31 +54,15 @@ const Signup: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError(null);
 
-    const { first_name, last_name, email, password } = formData;
-    if (!first_name || !last_name || !email || !password) {
+    const { name, email, password } = formData;
+    if (!name || !email || !password) {
       setError("All fields are required.");
-      setLoading(false);
       return;
     }
 
-    try {
-      const res = await axiosInstance.post("/auth/signup", formData);
-      localStorage.setItem("access_token", res.access_token);
-      localStorage.setItem("refresh_token", res.refresh_token);
-      navigate("/login");
-    } catch (err: any) {
-      const msg = err?.response?.data?.detail;
-      setError(
-        Array.isArray(msg)
-          ? msg.map((e: any) => `${e.loc.join(".")}: ${e.msg}`).join(", ")
-          : msg || "Signup failed."
-      );
-    } finally {
-      setLoading(false);
-    }
+    signupMutation.mutate(formData);
   };
 
   return (
@@ -79,28 +81,22 @@ const Signup: React.FC = () => {
         ))}
       </div>
 
-      {/* Signup Card - black */}
+      {/* Signup Card */}
       <motion.div
         className="max-w-md w-full p-8 bg-black rounded-2xl shadow-2xl border border-gray-700 relative z-10"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        {/* Larger Logo */}
+        {/* Logo */}
         <div className="flex justify-center mb-8">
-          <img
-            src={logo}
-            alt="Everstory Logo"
-            className="w-32 h-32 object-contain"
-          />
+          <img src={logo} alt="Everstory Logo" className="w-32 h-32 object-contain" />
         </div>
 
         <SocialLogin />
 
         <div className="relative my-8 text-center">
-          <span className="relative z-10 px-4 text-gray-300 font-medium">
-            or
-          </span>
+          <span className="relative z-10 px-4 text-gray-300 font-medium">or</span>
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-gray-700/50"></div>
           </div>
@@ -109,19 +105,10 @@ const Signup: React.FC = () => {
         <form className="space-y-6" onSubmit={handleSubmit}>
           <InputField
             type="text"
-            placeholder="First name"
+            placeholder="Name"
             icon="person"
-            name="first_name"
-            value={formData.first_name}
-            onChange={handleChange}
-            className="bg-gray-900/60 text-white border-gray-700"
-          />
-          <InputField
-            type="text"
-            placeholder="Last name"
-            icon="person"
-            name="last_name"
-            value={formData.last_name}
+            name="name"
+            value={formData.name}
             onChange={handleChange}
             className="bg-gray-900/60 text-white border-gray-700"
           />
@@ -146,13 +133,13 @@ const Signup: React.FC = () => {
 
           {error && <p className="text-red-400 text-center text-sm">{error}</p>}
 
-          {/* Yellow signup button */}
+          {/* Signup Button */}
           <button
             type="submit"
             className="w-full py-3 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold rounded-full transition duration-300 disabled:opacity-50"
-            disabled={loading}
+            disabled={signupMutation.isPending}
           >
-            {loading ? (
+            {signupMutation.isPending ? (
               <div className="flex items-center justify-center">
                 <motion.div
                   className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"

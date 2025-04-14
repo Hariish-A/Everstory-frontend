@@ -1,10 +1,17 @@
 import { Home, Users, LogOut } from "lucide-react";
 import logo from "@/assets/everstory-logo-wide.png";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useApiPost } from "@/hooks/useApi";
+import { toast } from "react-toastify";
+import profilePic from "@/assets/profile-pic.jpg";
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const logoutMutation = useApiPost("http://localhost:8011/auth/logout", {
+    mutationKey: ["logout"],
+  });
 
   const handleFeedClick = () => {
     if (location.pathname === "/for-you") {
@@ -23,6 +30,21 @@ const Sidebar = () => {
 
   const handleProfileClick = () => {
     navigate("/profile");
+  };
+
+  const handleLogout = () => {
+    logoutMutation.mutate(undefined, {
+      onSuccess: () => {
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        toast.success("Logged out successfully");
+        navigate("/login");
+      },
+      onError: (err: any) => {
+        const msg = err?.response?.data?.detail || "Logout failed.";
+        toast.error(msg);
+      },
+    });
   };
 
   return (
@@ -64,19 +86,24 @@ const Sidebar = () => {
       {/* Bottom Section */}
       <div>
         <div className="border-t border-white/30 mb-4" />
-
         <div className="flex items-center justify-between px-2">
-          {/* Entire left side clickable for profile */}
           <div
-            className="flex items-center gap-3 cursor-pointer"
             onClick={handleProfileClick}
+            className="flex items-center gap-3 cursor-pointer"
           >
-            <div className="w-10 h-10 rounded-full bg-gray-300" />
+            <img
+              src={profilePic}
+              alt="Profile"
+              className="w-10 h-10 rounded-full object-cover"
+            />
             <span className="text-white text-sm">Profile</span>
           </div>
 
-          {/* Logout button (non-clickable area for profile navigation) */}
-          <button className="text-white hover:text-orange-300 transition">
+          {/* ✅ Logout Button Fix */}
+          <button
+            onClick={handleLogout}
+            className="text-white hover:text-orange-300 transition"
+          >
             <LogOut size={20} />
           </button>
         </div>

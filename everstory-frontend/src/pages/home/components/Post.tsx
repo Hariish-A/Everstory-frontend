@@ -42,9 +42,6 @@ const Post: React.FC<PostProps> = ({ post }) => {
           />
         </div>
       )}
-    <span className="absolute bottom-6 left-10">
-      Desc
-    </span>
 
     </div>
   );
